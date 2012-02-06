@@ -1,6 +1,7 @@
 require_relative "g_spreadsheet"
 require_relative "lib/google_spreadsheet"
 require "rexml/element"
+require "rexml/document"
 
 class QuizSet
 
@@ -27,6 +28,27 @@ class QuizSet
 
   def to_xml
 
+    quiz_set_xml = REXML::Element.new "quiz_set"
+
+    quiz_set_xml.add_element("spreadsheet_title").add_text @worksheet.spreadsheet.title
+    quiz_set_xml.add_element("title").add_text             @worksheet.title
+    quiz_set_xml.add_element("id_url").add_text            @worksheet.worksheet_feed_url
+
+    quizzes_xml = quiz_set_xml.add_element ("quizzes")
+    quiz_set_xml.add_element quizzes_xml
+
+    @worksheet.rows(1).each do |row|
+    quiz_xml = REXML::Element.new ("quiz")
+      # iterate through multiple choice fields
+      MC_COLUMNS_ALIAS.keys.each do |field_id|
+        # extract value and add it to xml
+        value = row[@columns_maps[field_id]]
+        quiz_xml.add_element(field_id.to_s).add_text(value)
+      end
+
+      quizzes_xml.add_element quiz_xml
+    end
+    quiz_set_xml
   end
 
   private # ------------------------------ PRIVATE METHODS ---------------------------------
@@ -56,6 +78,6 @@ class QuizSet
 end
 
 
-#qs = QuizSet.new (GSpreadsheet.new G_TEST_DOC).get_quiz_worksheet
+qs = QuizSet.new (GSpreadsheet.new G_TEST_DOC).get_quiz_worksheet
 #
-#puts qs.columns_maps
+puts qs.to_xml
