@@ -31,7 +31,7 @@ class QuizSet
     quiz_set_xml = REXML::Element.new "quiz_set"
 
     quiz_set_xml.add_element("spreadsheet_title").add_text @worksheet.spreadsheet.title
-    quiz_set_xml.add_element("title").add_text             @worksheet.title
+    quiz_set_xml.add_element("quiz_set_title").add_text             @worksheet.title
     quiz_set_xml.add_element("id_url").add_text            @worksheet.worksheet_feed_url
 
     quizzes_xml = quiz_set_xml.add_element ("quizzes")
@@ -39,13 +39,23 @@ class QuizSet
 
     @worksheet.rows(1).each do |row|
     quiz_xml = REXML::Element.new ("quiz")
+
+      # create wrong_answers container
+      wrong_answers_xml = REXML::Element.new ("wrong_answers")
+
       # iterate through multiple choice fields
       MC_COLUMNS_ALIAS.keys.each do |field_id|
-        # extract value and add it to xml
+        # extract value of the field (to be added into xml)
         value = row[@columns_maps[field_id]]
-        quiz_xml.add_element(field_id.to_s).add_text(value)
-      end
 
+        # wrong answers are going to a separate element
+        if  field_id.to_s[0,12] == "wrong_answer"
+          wrong_answers_xml.add_element("wrong_answer").add_text(value)
+        else
+          quiz_xml.add_element(field_id.to_s).add_text(value)
+        end
+      end
+      quiz_xml.add_element    wrong_answers_xml
       quizzes_xml.add_element quiz_xml
     end
     quiz_set_xml

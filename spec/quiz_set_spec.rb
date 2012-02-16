@@ -27,7 +27,7 @@ describe QuizSet do
     context "with test document" do
       it "returns specific data in xml" do
         @quiz_set.to_xml.elements["spreadsheet_title"].text.should  eql "Test multi choice for ruby proj"
-        @quiz_set.to_xml.elements["title"].text.should              eql "Part 1"
+        @quiz_set.to_xml.elements["quiz_set_title"].text.should     eql "Part 1"
       end
     end
   end
