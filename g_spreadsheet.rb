@@ -1,5 +1,6 @@
 require "rubygems"
-require_relative "lib/google_spreadsheet"
+#require "bundler/setup"
+require "google_spreadsheet"
 require_relative "constants"
 
 
@@ -25,7 +26,12 @@ class GSpreadsheet
   end
 
   def get_quiz_worksheet
-      @spreadsheet.worksheets[0]
+    @spreadsheet.worksheets[0]
+  end
+
+  def get_worksheet_as_array(worksheet_id)
+
+    @spreadsheet.worksheets[0].rows
   end
 
 end

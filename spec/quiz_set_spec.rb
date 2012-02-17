@@ -1,4 +1,4 @@
-require "rspec"
+require 'rspec'
 require_relative "../quiz_set"
 require_relative "describe_internally"
 
