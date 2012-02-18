@@ -4,7 +4,7 @@ require 'dm-timestamps'
 require 'data_mapper'
 
 
-DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/quizzes.sqlite3")
+
 
 
 class Exercise
@@ -29,12 +29,17 @@ class Quiz
   property :id,            Serial   # primary serial key
   property :name,          String
 
-  has n, :exercise
+  has n, :exercises
+
 end
 
 
-DataMapper.finalize
-DataMapper.auto_upgrade!
+#DataMapper.finalize
+#DataMapper.auto_upgrade!
 #
+
+#quiz = Quiz.first
+#
+#puts quiz.exercises[0].question
 
 #DataMapper.auto_migrate!
